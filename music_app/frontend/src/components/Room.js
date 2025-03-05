@@ -19,6 +19,7 @@ export default class Room extends Component {
         this.onUpdateShowSettings = this.onUpdateShowSettings.bind(this);
         this.renderSettingsButton = this.renderSettingsButton.bind(this);
         this.renderSettings = this.renderSettings.bind(this);
+        this.getRoomDetails = this.getRoomDetails.bind(this);
     }
 
 
@@ -67,7 +68,7 @@ export default class Room extends Component {
                  votesToSkip={this.state.votesToSkip} 
                  guestCanPause={this.state.guestCanPause} 
                  roomCode={this.roomCode}
-                 updateCallback={null}
+                 updateCallback={this.getRoomDetails}
                 />
             </Grid>
             <Grid item xs={12} align="center">
