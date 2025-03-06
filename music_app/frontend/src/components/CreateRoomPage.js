@@ -42,11 +42,15 @@ export default class CreateRoomPage extends Component {
   }
 
   handleRoomButtonPressed() {
+
+    const csrfToken = document.cookie.match(/csrftoken=([^;]+)/);
+    const token = csrfToken ? csrfToken[1] : "";
+
     const requestOptions = {
       method: "POST",
       headers: { 
         "Content-Type": "application/json",
-        'X-CSRFToken': document.cookie.match(/csrftoken=([^;]+)/)[1], //grabbing csrftoken from the browser
+        'X-CSRFToken': token, //grabbing csrftoken from the browser
        },
       body: JSON.stringify({
         votes_to_skip: this.state.votesToSkip,
@@ -59,11 +63,14 @@ export default class CreateRoomPage extends Component {
   }
 
   handleUpdateButtonPressed() {
+    const csrfToken = document.cookie.match(/csrftoken=([^;]+)/);
+    const token = csrfToken ? csrfToken[1] : "";
+
     const requestOptions = {
       method: "PATCH",
       headers: { 
         "Content-Type": "application/json",
-        'X-CSRFToken': document.cookie.match(/csrftoken=([^;]+)/)[1], //grabbing csrftoken from the browser
+        'X-CSRFToken': token,
        },
       body: JSON.stringify({
         votes_to_skip: this.state.votesToSkip,

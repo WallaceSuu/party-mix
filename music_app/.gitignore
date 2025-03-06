@@ -1,0 +1,24 @@
+node_modules/
+__pycache__/
+*.pyc
+venv/
+.env
+*.log
+.idea/
+.vscode/
+.DS_Store  # macOS
+Thumbs.db  # Windows
+*.class
+*.o
+*.a
+.env
+.env.local
+dist/
+build/
+out/
+coverage/
+*.gcov
+*.lcov
+npm-debug.log*
+*.tsbuildinfo
+.env.*
