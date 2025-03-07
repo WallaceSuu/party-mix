@@ -1,11 +1,12 @@
 from .models import SpotifyToken
 from django.utils import timezone
 from datetime import timedelta
-from requests import post
+from requests import post, put, get
 from .credentials import CLIENT_SECRET, CLIENT_ID, REDIRECT_URI
 
 
 print("util.py: ", CLIENT_ID, CLIENT_SECRET, REDIRECT_URI)
+BASE_URL = "https://api.spotify.com/v1/me/"
 
 def get_user_tokens(session_id):
     user_tokens = SpotifyToken.objects.filter(user=session_id)
@@ -59,5 +60,20 @@ def renew_spotify_token(session_id):
     expires_in = response.get('expires_in') or 3600 #in case it returns none in this field
     new_refresh_token = response.get('refresh_token') or old_refresh_token
 
-
     update_or_create_user_tokens(session_id, access_token, token_type, expires_in, new_refresh_token)
+
+def execute_spotify_api_request(session_id, endpoint, post_=False, put_=False):
+    tokens = get_user_tokens(session_id)
+    header = {"Content-Type": "application/json", "Authorization": "Bearer " + tokens.access_token}
+    
+    if post_:
+        post(BASE_URL + endpoint, headers=header)
+    if put_:
+        put(BASE_URL + endpoint, headers=header)
+    
+    response = get(BASE_URL + endpoint, (), headers=header)
+    try:
+        return response.json()
+    except:
+        print(response)
+        return {"Error": "Issue with request"}
