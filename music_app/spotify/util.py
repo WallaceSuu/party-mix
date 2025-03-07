@@ -5,11 +5,15 @@ from requests import post
 import os
 from dotenv import load_dotenv
 
-load_dotenv(dotenv_path='music_app\spotify\.env')
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+dotenv_path = os.path.join(BASE_DIR, '.env')
+load_dotenv(dotenv_path)
 
 CLIENT_ID = os.getenv("CLIENT_ID")
 CLIENT_SECRET = os.getenv("CLIENT_SECRET")
 REDIRECT_URI = os.getenv("REDIRECT_URI")
+
+print(CLIENT_ID, CLIENT_SECRET, REDIRECT_URI)
 
 def get_user_tokens(session_id):
     user_tokens = SpotifyToken.objects.filter(user=session_id)
@@ -18,8 +22,7 @@ def get_user_tokens(session_id):
     else:
         return None
 
-def update_or_create_user_token(session_key, access_token, token_type, expires_in, refresh_token):
-    expires_in = 3600
+def update_or_create_user_tokens(session_key, access_token, token_type, expires_in, refresh_token):
     tokens = get_user_tokens(session_key)
     expires_in = timezone.now() + timedelta(seconds=expires_in)
 
@@ -47,18 +50,19 @@ def is_spotify_authenticated(session_id):
     return False
 
 def renew_spotify_token(session_id):
-    refresh_token = get_user_tokens(session_id.refresh_token)
+    refresh_token = get_user_tokens(session_id).refresh_token
+
 
     response = post("https://accounts.spotify.com/api/token", data={
-        "grant_type": "refresh_token",
-        "refresh_token": refresh_token,
-        "client_id": CLIENT_ID,
-        "client_secret": CLIENT_SECRET,
+        'grant_type': 'refresh_token',
+        'refresh_token': refresh_token,
+        'client_id': CLIENT_ID,
+        'client_secret': CLIENT_SECRET
     }).json()
 
-    access_token = response.get("access_token")
-    token_type = response.get("token_type")
-    expires_in = response.get("expires_in")
-    refresh_token = response.get("refresh_token")
+    access_token = response.get('access_token')
+    token_type = response.get('token_type')
+    expires_in = response.get('expires_in') or 3600 #in case it returns none in this field
+    refresh_token = response.get('refresh_token')
 
-    update_or_create_user_token(session_id, access_token, token_type, expires_in, refresh_token)
+    update_or_create_user_tokens(session_id, access_token, token_type, expires_in, refresh_token)
