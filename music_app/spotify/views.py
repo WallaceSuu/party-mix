@@ -4,14 +4,9 @@ from requests import Request, post
 from rest_framework import status
 from rest_framework.response import Response
 from .util import update_or_create_user_tokens, is_spotify_authenticated, get_user_tokens
-import os
-from dotenv import load_dotenv
+from .credentials import CLIENT_SECRET, CLIENT_ID, REDIRECT_URI
 
-load_dotenv(dotenv_path='music_app\spotify\.env')
-
-CLIENT_ID = os.getenv("CLIENT_ID")
-CLIENT_SECRET = os.getenv("CLIENT_SECRET")
-REDIRECT_URI = os.getenv("REDIRECT_URI")
+print("views.py: ", CLIENT_ID, CLIENT_SECRET, REDIRECT_URI)
 
 # Create your views here.
 

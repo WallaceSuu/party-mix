@@ -2,18 +2,10 @@ from .models import SpotifyToken
 from django.utils import timezone
 from datetime import timedelta
 from requests import post
-import os
-from dotenv import load_dotenv
+from .credentials import CLIENT_SECRET, CLIENT_ID, REDIRECT_URI
 
-BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-dotenv_path = os.path.join(BASE_DIR, '.env')
-load_dotenv(dotenv_path)
 
-CLIENT_ID = os.getenv("CLIENT_ID")
-CLIENT_SECRET = os.getenv("CLIENT_SECRET")
-REDIRECT_URI = os.getenv("REDIRECT_URI")
-
-print(CLIENT_ID, CLIENT_SECRET, REDIRECT_URI)
+print("util.py: ", CLIENT_ID, CLIENT_SECRET, REDIRECT_URI)
 
 def get_user_tokens(session_id):
     user_tokens = SpotifyToken.objects.filter(user=session_id)
@@ -50,19 +42,22 @@ def is_spotify_authenticated(session_id):
     return False
 
 def renew_spotify_token(session_id):
-    refresh_token = get_user_tokens(session_id).refresh_token
-
+    current_tokens = get_user_tokens(session_id)
+    old_refresh_token = current_tokens.refresh_token
 
     response = post("https://accounts.spotify.com/api/token", data={
         'grant_type': 'refresh_token',
-        'refresh_token': refresh_token,
+        'refresh_token': old_refresh_token,
         'client_id': CLIENT_ID,
         'client_secret': CLIENT_SECRET
     }).json()
 
+    print("Spotify API response:", response)
+
     access_token = response.get('access_token')
     token_type = response.get('token_type')
     expires_in = response.get('expires_in') or 3600 #in case it returns none in this field
-    refresh_token = response.get('refresh_token')
+    new_refresh_token = response.get('refresh_token') or old_refresh_token
 
-    update_or_create_user_tokens(session_id, access_token, token_type, expires_in, refresh_token)
+
+    update_or_create_user_tokens(session_id, access_token, token_type, expires_in, new_refresh_token)
