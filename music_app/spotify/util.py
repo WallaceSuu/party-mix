@@ -4,8 +4,6 @@ from datetime import timedelta
 from requests import post, put, get
 from .credentials import CLIENT_SECRET, CLIENT_ID, REDIRECT_URI
 
-
-print("util.py: ", CLIENT_ID, CLIENT_SECRET, REDIRECT_URI)
 BASE_URL = "https://api.spotify.com/v1/me/"
 
 def get_user_tokens(session_id):
@@ -53,7 +51,7 @@ def renew_spotify_token(session_id):
         'client_secret': CLIENT_SECRET
     }).json()
 
-    print("Spotify API response:", response)
+    #print("Spotify API response:", response)
 
     access_token = response.get('access_token')
     token_type = response.get('token_type')
@@ -75,5 +73,11 @@ def execute_spotify_api_request(session_id, endpoint, post_=False, put_=False):
     try:
         return response.json()
     except:
-        print(response)
+        #print(response)
         return {"Error": "Issue with request"}
+    
+def pause_song(session_id):
+    return execute_spotify_api_request(session_id, "player/pause", put_=True)
+
+def play_song(session_id):
+    return execute_spotify_api_request(session_id, "player/play", put_=True)

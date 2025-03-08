@@ -35,8 +35,6 @@ export default class Room extends Component {
         clearInterval(this.interval);
     }
 
-
-
     getRoomDetails() {
         fetch('/api/get-room' + '?code=' + this.roomCode).then((response) => {
             if (!response.ok) {
@@ -81,7 +79,6 @@ export default class Room extends Component {
                 return response.json();
             }
         }).then((data) => {
-            console.log("Current Song Data:", data);
             this.setState({song: data})
         })
     }
@@ -145,14 +142,17 @@ export default class Room extends Component {
         if (this.state.showSettings) {
             return this.renderSettings();
         }
+
         return (
-            <Grid container spacing={1}>
+            <Grid container spacing={1} justifyContent="center">
                 <Grid item xs={12} align="center">
                     <Typography variant="h6" component="h6">
                         Code: {this.roomCode}
                     </Typography>
                 </Grid>
-                <MusicPlayer {...this.state.song} />
+                <Grid item xs={4}>
+                    <MusicPlayer {...this.state.song}/>
+                </Grid>
                 {this.state.isHost ? this.renderSettingsButton() : null}
                 <Grid item xs={12} align="center">
                     <Button variant="contained" color="secondary" onClick={this.onLeaveButton}>

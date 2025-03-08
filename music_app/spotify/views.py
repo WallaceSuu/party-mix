@@ -7,10 +7,6 @@ from .util import *
 from .credentials import CLIENT_SECRET, CLIENT_ID, REDIRECT_URI
 from api.models import Room
 
-print("views.py: ", CLIENT_ID, CLIENT_SECRET, REDIRECT_URI)
-
-# Create your views here.
-
 class AuthURL(APIView):
     def get(self, request, format=None):
         scopes = "user-read-playback-state user-modify-playback-state user-read-currently-playing"
@@ -95,5 +91,24 @@ class CurrentSong(APIView):
             "id": song_id,
         }
 
-        print("Spotify API Response:", response)
-        return Response(response, status=status.HTTP_200_OK)
+        return Response(song, status=status.HTTP_200_OK)
+    
+class PauseSong(APIView):
+    def put(self, response, format=None):
+        room_code = self.request.session.get("room_code")
+        room = Room.objects.filter(code=room_code)[0]
+        if self.request.session.session_key == room.host or room.guest_can_pause:
+            pause_song(room.host)
+            return Response({}, status=status.HTTP_204_NO_CONTENT)
+    
+        return Response({}, status=status.HTTP_403_FORBIDDEN)
+
+class PlaySong(APIView):
+    def put(self, response, format=None):
+        room_code = self.request.session.get("room_code")
+        room = Room.objects.filter(code=room_code)[0]
+        if self.request.session.session_key == room.host or room.guest_can_pause:
+            play_song(room.host)
+            return Response({}, status=status.HTTP_204_NO_CONTENT)
+    
+        return Response({}, status=status.HTTP_403_FORBIDDEN)

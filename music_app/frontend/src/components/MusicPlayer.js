@@ -9,8 +9,31 @@ export default class MusicPlayer extends Component {
         super(props);
     }
 
+    onPauseSong() {
+        const csrfToken = document.cookie.match(/csrftoken=([^;]+)/);
+        const token = csrfToken ? csrfToken[1] : "";
+        const requestOptions = {
+            method: "PUT",
+            headers: { "Content-Type": "application/json",
+                        "X-CSRFToken": token,
+            },
+        };
+        fetch("/spotify/pause", requestOptions);
+    }
+
+    onPlaySong() {
+        const csrfToken = document.cookie.match(/csrftoken=([^;]+)/);
+        const token = csrfToken ? csrfToken[1] : "";
+        const requestOptions = {
+            method: "PUT",
+            headers: { "Content-Type": "application/json",
+                       "X-CSRFToken": token,
+            },
+        };
+        fetch("/spotify/play", requestOptions);
+    }
+
     render() {
-        console.log("MusicPlayer Props:", this.props);
         const songProgress = (this.props.time/this.props.duration)*100;
 
         return (
@@ -27,7 +50,12 @@ export default class MusicPlayer extends Component {
                             {this.props.artist}
                         </Typography>
                         <div>
-                            <IconButton>
+                            <IconButton onClick = {() => 
+                                {
+                                    this.props.is_playing ? this.onPauseSong() : this.onPlaySong();
+                                }
+                                }
+                            >
                                 {this.props.is_playing ? <PauseIcon /> : <PlayArrowIcon />}
                             </IconButton> 
                             <IconButton>
