@@ -10,6 +10,7 @@ export default class RoomJoinPage extends Component {
             roomCode: "",
             error: "",
             usernamePage: false,
+            username: "",
         }
     }
 
@@ -81,11 +82,16 @@ export default class RoomJoinPage extends Component {
     }
 
     onEnterRoom = () =>  {
-        const requestOptions = {
+        const username = this.state.textboxValue
+
+        console.log("your username:", this.state.textboxValue);
+        
+        var requestOptions = {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
-                code: this.state.roomCode
+                code: this.state.roomCode,
+                username: username,
             })
         };
 

@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from rest_framework import generics, status
-from .serializers import RoomSerializer, CreateRoomSerializer, UpdateRoomSerializer
-from .models import Room
+from .serializers import *
+from .models import *
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from django.http import JsonResponse
@@ -20,12 +20,31 @@ class JoinRoom(APIView):
             self.request.session.create()
 
         code = request.data.get(self.lookup_url_kwarg)
+        username = request.data.get("username") 
+
         if code != None:
             room_rslt = Room.objects.filter(code=code)
             if len(room_rslt)>0:
                 room = room_rslt[0]
                 self.request.session['room_code'] = code
-                return Response({"Message: ": "Room joined!"}, status=status.HTTP_200_OK)
+
+                user_session_key = self.request.session.session_key
+                user = User.objects.filter(user=user_session_key).first()
+
+                if user:
+                    user.room = room
+                    user.save()
+                else:
+                    user = User.objects.create(username=username,
+                                        user=user_session_key,
+                                        created_at="date",
+                                        host=False,
+                                        room=room
+                                        )
+
+                    user_data = AddUserSerializer(user).data
+
+                    return Response({"Message: ": "Room joined!", "user" : user_data}, status=status.HTTP_200_OK)
 
             return Response({"Bad Request: ": "Invalid room code"}, status=status.HTTP_400_BAD_REQUEST)
 
@@ -78,7 +97,6 @@ class UserInRoom(APIView):
     def get(self, request, format=None):
         if not self.request.session.exists(self.request.session.session_key):
             self.request.session.create()
-
         data = {
             "code": self.request.session.get("room_code")
         }

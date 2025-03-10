@@ -22,26 +22,21 @@ export default class CreateRoomPage extends Component {
         successMsg: "",
     };
 
-    this.handleVotesChange = this.handleVotesChange.bind(this);
-    this.handleGuestCanPauseChange = this.handleGuestCanPauseChange.bind(this);
-    this.handleRoomButtonPressed = this.handleRoomButtonPressed.bind(this); //must bind to method to class to use this keyword
-    this.handleUpdateButtonPressed = this.handleUpdateButtonPressed.bind(this);
-
   }
 
-  handleVotesChange(e) {
+  handleVotesChange = (e) => {
     this.setState({
         votesToSkip: Number(e.target.value),
     });
   }
 
-  handleGuestCanPauseChange(e) {
+  handleGuestCanPauseChange = (e) => {
     this.setState({
         guestCanPause: e.target.value == "true" ? true:false,
     });
   }
 
-  handleRoomButtonPressed() {
+  handleRoomButtonPressed = () => {
 
     const csrfToken = document.cookie.match(/csrftoken=([^;]+)/);
     const token = csrfToken ? csrfToken[1] : "";
@@ -62,7 +57,7 @@ export default class CreateRoomPage extends Component {
       .then((data) => this.props.history.push("/room/" + data.code));
   }
 
-  handleUpdateButtonPressed() {
+  handleUpdateButtonPressed = () => {
     const csrfToken = document.cookie.match(/csrftoken=([^;]+)/);
     const token = csrfToken ? csrfToken[1] : "";
 

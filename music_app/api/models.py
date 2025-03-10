@@ -23,5 +23,7 @@ class Room(models.Model):
 
 class User(models.Model):
     username = models.CharField(max_length=50)
+    user = models.CharField(max_length=50, unique=True)
     created_at = models.DateTimeField(auto_now_add=True)
     host = models.BooleanField(null=False, default=False)
+    room = models.ForeignKey(Room, on_delete=models.CASCADE)
