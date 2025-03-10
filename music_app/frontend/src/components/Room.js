@@ -15,14 +15,6 @@ export default class Room extends Component {
             song: {},
         };
         this.roomCode = this.props.match.params.roomCode;
-        this.onLeaveButton = this.onLeaveButton.bind(this);
-        this.onUpdateShowSettings = this.onUpdateShowSettings.bind(this);
-        this.renderSettingsButton = this.renderSettingsButton.bind(this);
-        this.renderSettings = this.renderSettings.bind(this);
-        this.getRoomDetails = this.getRoomDetails.bind(this);
-        this.authenticateSpotify = this.authenticateSpotify.bind(this);
-        this.getCurrentSong = this.getCurrentSong.bind(this);
-        this.getRoomDetails();
     }
 
     componentDidMount() {
@@ -33,7 +25,7 @@ export default class Room extends Component {
         clearInterval(this.interval);
     }
 
-    getRoomDetails() {
+    getRoomDetails = () => {
         fetch('/api/get-room' + '?code=' + this.roomCode).then((response) => {
             if (!response.ok) {
                 this.props.leaveRoomCallback();
@@ -53,7 +45,7 @@ export default class Room extends Component {
         })
     }
 
-    authenticateSpotify() {
+    authenticateSpotify = () => {
         fetch('/spotify/is-authenticated')
             .then((response) => response.json())
             .then((data) => {
@@ -69,7 +61,7 @@ export default class Room extends Component {
         });
     }
 
-    getCurrentSong() {
+    getCurrentSong = () => {
         fetch("/spotify/current-song").then((response) => {
             if (!response.ok) {
                 return {};
@@ -81,7 +73,7 @@ export default class Room extends Component {
         })
     }
 
-    onLeaveButton() {
+    onLeaveButton = () => {
         const csrfToken = document.cookie.match(/csrftoken=([^;]+)/);
         const token = csrfToken ? csrfToken[1] : "";
 
@@ -98,13 +90,13 @@ export default class Room extends Component {
         });
     }
 
-    onUpdateShowSettings(value) {
+    onUpdateShowSettings = (value) => {
         this.setState({
             showSettings: value,
         });
     }
 
-    renderSettings() {
+    renderSettings = () => {
         return (<Grid container spacing={1}>
             <Grid item xs={12} align="center">
                 <CreateRoomPage 
@@ -126,7 +118,7 @@ export default class Room extends Component {
         </Grid>)
     }
 
-    renderSettingsButton() {
+    renderSettingsButton = () => {
         return (
             <Grid item xs={12} align="center">
                 <Button variant="contained" color="primary" onClick={() => this.onUpdateShowSettings(true)}>
