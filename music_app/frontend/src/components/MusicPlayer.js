@@ -76,7 +76,7 @@ export default class MusicPlayer extends Component {
                         </Typography>
                         <div>
                             <IconButton onClick={() => this.onGoBack()}>
-                                <SkipPreviousIcon />
+                                {this.props.isHost ? <SkipPreviousIcon /> : null}
                             </IconButton>
                             <IconButton onClick = {() => 
                                 {
@@ -90,7 +90,7 @@ export default class MusicPlayer extends Component {
                                 <SkipNextIcon />
                             </IconButton>
                         </div>
-                        <Typography component="h5" variant="h5">
+                        <Typography component="h6" variant="h6">
                             {this.props.votes} / {this.props.votes_required}
                         </Typography>
                     </Grid>
