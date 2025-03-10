@@ -1,6 +1,22 @@
 import React, { Component } from "react";
 import { render } from "react-dom";
 import HomePage from "./Homepage";
+import { ThemeProvider, createTheme, Container } from "@material-ui/core";
+import { indigo } from "@material-ui/core/colors";
+
+const theme = createTheme({
+  palette: {
+    primary: {
+      main: indigo[700],
+    },
+    secondary: {
+      main: indigo[400],
+    },
+    background: {
+      main: indigo[50],
+    },
+  }
+})
 
 export default class App extends Component {
   constructor(props) {
@@ -9,9 +25,13 @@ export default class App extends Component {
 
   render() {
     return (
-      <div className="center">
-        <HomePage />
-      </div>
+      <Container>
+        <ThemeProvider theme={theme}>
+          <div className="center">
+            <HomePage />
+          </div>
+        </ThemeProvider>
+      </Container>
     );
   }
 }

@@ -1,8 +1,6 @@
 import React, { Component } from "react";
-import { Grid, Button, Typography } from "@material-ui/core"
-import { Link } from "react-router-dom"
+import { Grid, Button, Typography, Box } from "@material-ui/core"
 import CreateRoomPage from "./CreateRoomPage";
-import { Create } from "@material-ui/icons";
 import MusicPlayer from "./MusicPlayer";
 
 export default class Room extends Component {
@@ -144,30 +142,29 @@ export default class Room extends Component {
         }
 
         return (
-            <Grid container spacing={1} justifyContent="center">
-                <Grid item xs={12} align="center">
+            <div className="main-wrapper">
+                <Box position="absolute" top={0} left={0} zIndex={1}>
                     <Typography variant="h6" component="h6">
-                        Code: {this.roomCode}
+                        {this.state.isHost ? "Host" : ""}
                     </Typography>
+                </Box>
+                <Grid container spacing={1} justifyContent="center">
+                    <Grid item xs={12} align="center">
+                        <Typography variant="h6" component="h6">
+                            Code: {this.roomCode}
+                        </Typography>
+                    </Grid>
+                    <Grid item xs={8}>
+                        <MusicPlayer {...this.state.song}/>
+                    </Grid>
+                    {this.state.isHost ? this.renderSettingsButton() : null}
+                    <Grid item xs={12} align="center">
+                        <Button variant="contained" color="secondary" onClick={this.onLeaveButton}>
+                            Leave Room
+                        </Button>
+                    </Grid>
                 </Grid>
-                <Grid item xs={4}>
-                    <MusicPlayer {...this.state.song}/>
-                </Grid>
-                {this.state.isHost ? this.renderSettingsButton() : null}
-                <Grid item xs={12} align="center">
-                    <Button variant="contained" color="secondary" onClick={this.onLeaveButton}>
-                        Leave Room
-                    </Button>
-                </Grid>
-            </Grid>
-
-
-            //<div>
-              //  <h3>{this.roomCode}</h3>
-                //<p>votes: {this.state.votesToSkip}</p>
-               // <p>guest_can_pause: {this.state.guestCanPause}</p>
-                //<p>host: {this.state.host}</p>
-            //</div>
+            </div>
         );
     }
 

@@ -3,6 +3,7 @@ import { Grid, Typography, Card, IconButton, LinearProgress, Icon } from "@mater
 import PlayArrowIcon from "@material-ui/icons/PlayArrow"
 import PauseIcon from "@material-ui/icons/Pause"
 import SkipNextIcon from "@material-ui/icons/SkipNext";
+import SkipPreviousIcon from "@material-ui/icons/SkipPrevious"
 
 export default class MusicPlayer extends Component {
     constructor(props) {
@@ -33,6 +34,30 @@ export default class MusicPlayer extends Component {
         fetch("/spotify/play", requestOptions);
     }
 
+    onSkipSong() {
+            const csrfToken = document.cookie.match(/csrftoken=([^;]+)/);
+            const token = csrfToken ? csrfToken[1] : "";
+            const requestOptions = {
+                method: "POST",
+                headers: { "Content-Type": "application/json",
+                           "X-CSRFToken": token,
+                },
+            };
+            fetch("/spotify/skip", requestOptions);
+    }
+
+    onGoBack() {
+        const csrfToken = document.cookie.match(/csrftoken=([^;]+)/);
+        const token = csrfToken ? csrfToken[1] : "";
+        const requestOptions = {
+            method: "POST",
+            headers: { "Content-Type": "application/json",
+                       "X-CSRFToken": token,
+            },
+        };
+        fetch("/spotify/go-back", requestOptions);
+    }
+
     render() {
         const songProgress = (this.props.time/this.props.duration)*100;
 
@@ -50,6 +75,9 @@ export default class MusicPlayer extends Component {
                             {this.props.artist}
                         </Typography>
                         <div>
+                            <IconButton onClick={() => this.onGoBack()}>
+                                <SkipPreviousIcon />
+                            </IconButton>
                             <IconButton onClick = {() => 
                                 {
                                     this.props.is_playing ? this.onPauseSong() : this.onPlaySong();
@@ -58,10 +86,13 @@ export default class MusicPlayer extends Component {
                             >
                                 {this.props.is_playing ? <PauseIcon /> : <PlayArrowIcon />}
                             </IconButton> 
-                            <IconButton>
+                            <IconButton onClick={() => this.onSkipSong()}>
                                 <SkipNextIcon />
                             </IconButton>
                         </div>
+                        <Typography component="h5" variant="h5">
+                            {this.props.votes} / {this.props.votes_required}
+                        </Typography>
                     </Grid>
                 </Grid>
                 <LinearProgress variant="determinate" value={songProgress}>
