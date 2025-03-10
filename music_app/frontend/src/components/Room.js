@@ -155,7 +155,7 @@ export default class Room extends Component {
                         </Typography>
                     </Grid>
                     <Grid item xs={8}>
-                        <MusicPlayer {...this.state.song}/>
+                        <MusicPlayer {...this.state.song} isHost={this.state.isHost} />
                     </Grid>
                     {this.state.isHost ? this.renderSettingsButton() : null}
                     <Grid item xs={12} align="center">
