@@ -6,13 +6,11 @@ export default class RoomJoinPage extends Component {
     constructor(props) {    
         super(props);
         this.state = {
+            textboxValue: "",
             roomCode: "",
             error: "",
+            usernamePage: false,
         }
-
-        this.handleTextFieldChange = this.handleTextFieldChange.bind(this);
-        this.enteredRoomCode = this.onEnterRoom.bind(this);
-
     }
 
     render() {
@@ -20,27 +18,29 @@ export default class RoomJoinPage extends Component {
             <Grid container spacing={1}>
                 <Grid item xs={12} align="center">
                     <Typography variant="h4" component="h4">
-                        Join a Room
+                        {this.state.usernamePage ? "Enter a Username" : "Join a Room"}
                     </Typography>
                 </Grid>
                 <Grid item xs={12} align="center">
                     <TextField 
                     error={this.state.error}
-                    label="Code"
-                    placeholder="Enter a Room Code"
-                    value={this.state.roomCode}
+                    label= {this.state.usernamePage ? "Username" : "Code"}
+                    placeholder= {this.state.usernamePage ? "Enter a Username" : "Enter a Room Code"}
+                    value={this.state.textboxValue}
                     helperText={this.state.error}
                     variant="outlined"
                     onChange={this.handleTextFieldChange}
                     />
                 </Grid>
                 <Grid item xs={12} align="center">
-                    <Button variant="contained" color="primary" onClick={this.enteredRoomCode}>
-                        Enter Room
+                    <Button variant="contained" color="primary" onClick = {() => {
+                        this.state.usernamePage ? this.onEnterRoom() : this.onNextButton();
+                    }} >
+                        {this.state.usernamePage ? "Join Room" : "Next"}
                     </Button>
                 </Grid>
                 <Grid item xs={12} align="center">
-                    <Button variant="contained" color="secondary" to="/" component={Link}>
+                    <Button variant="contained" color="secondary" onClick = {() => this.onBackButton()}>
                         Back
                     </Button>
                 </Grid>
@@ -48,13 +48,39 @@ export default class RoomJoinPage extends Component {
         );
     }
 
-    handleTextFieldChange(e) {
+    handleTextFieldChange = (e) => {
         this.setState({
-            roomCode: e.target.value
+            textboxValue: e.target.value
         });
     }
 
-    onEnterRoom(e) {
+    onNextButton = () => {
+        const roomCode = this.state.textboxValue;
+        //need to check if room exists beforehand just to make sure
+        this.setState({
+            roomCode: roomCode,
+            textboxValue: "",
+            usernamePage: true,
+            error: null,
+        })
+    }
+    
+    onBackButton = (e) => {
+        if (this.state.usernamePage) {
+            this.setState({
+                roomCode: "",
+                usernamePage: false,
+                error: null
+            })
+        } else {
+            this.props.history.push("/");
+            this.setState({
+                usernamePage: true
+            })
+        }
+    }
+
+    onEnterRoom = () =>  {
         const requestOptions = {
             method: "POST",
             headers: { "Content-Type": "application/json" },
