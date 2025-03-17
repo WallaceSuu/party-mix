@@ -2,6 +2,10 @@ import React, { Component } from "react";
 import { Grid, Button, Typography, Box } from "@material-ui/core"
 import CreateRoomPage from "./CreateRoomPage";
 import MusicPlayer from "./MusicPlayer";
+import List from "@material-ui/core/List";
+import ListItem from "@material-ui/core/ListItem";
+import ListItemIcon from "@material-ui/core/ListItemIcon";
+import ListItemText from "@material-ui/core/ListItemText";
 
 export default class Room extends Component {
     constructor(props) {
@@ -13,6 +17,7 @@ export default class Room extends Component {
             showSettings: false,
             spotifyAuthenticated: false,
             song: {},
+            users: [],
         };
         this.roomCode = this.props.match.params.roomCode;
         this.onLeaveButton = this.onLeaveButton.bind(this);
@@ -22,11 +27,13 @@ export default class Room extends Component {
         this.getRoomDetails = this.getRoomDetails.bind(this);
         this.authenticateSpotify = this.authenticateSpotify.bind(this);
         this.getCurrentSong = this.getCurrentSong.bind(this);
+        this.getUsersInRoom = this.getUsersInRoom.bind(this);
         this.getRoomDetails();
     }
 
     componentDidMount() {
-        this.interval = setInterval(this.getCurrentSong, 1000);
+        this.interval = setInterval(this.getCurrentSong, 3000);
+        this.interval = setInterval(this.getUsersInRoom, 3000);
     }
 
     componentWillUnmount() {
@@ -81,10 +88,21 @@ export default class Room extends Component {
         })
     }
 
+    getUsersInRoom() {
+        fetch("/api/users-in-room").then((response) => {
+            if (!response.ok) {
+                return {};
+            } else {
+                return response.json();
+            }
+        }).then((data) => {
+            this.setState({users: data})
+        })
+    }
+
     onLeaveButton() {
         const csrfToken = document.cookie.match(/csrftoken=([^;]+)/);
         const token = csrfToken ? csrfToken[1] : "";
-
         const requestOptions = {
             method: "POST",
             credentials: "same-origin",
@@ -146,6 +164,13 @@ export default class Room extends Component {
                 <Box position="absolute" top={0} left={0} zIndex={1}>
                     <Typography variant="h6" component="h6">
                         {this.state.isHost ? "Host" : ""}
+                        <List>
+                            {this.state.users.map((user, index) => (
+                                <ListItem key={index}>
+                                    <ListItemText primary={user.username} />
+                                </ListItem>
+                            ))}
+                        </List>
                     </Typography>
                 </Box>
                 <Grid container spacing={1} justifyContent="center">

@@ -49,6 +49,13 @@ class JoinRoom(APIView):
             return Response({"Bad Request: ": "Invalid room code"}, status=status.HTTP_400_BAD_REQUEST)
 
         return Response({'Bad Request': 'Invalid post data, did not find a code key'}, status=status.HTTP_400_BAD_REQUEST)
+    
+class GetUsersInRoom(APIView):
+    def get(self, request, format=None):
+        room_code = self.request.session.get("room_code")
+        users = User.objects.filter(room__code=room_code)  # Adjust query based on your models
+        serializer = AddUserSerializer(users, many=True)
+        return Response(serializer.data)
 
 class CreateRoomView(APIView):
     serializer_class = CreateRoomSerializer
@@ -106,9 +113,15 @@ class UserInRoom(APIView):
 class LeaveRoom(APIView):
     def post(self, request, format=None):
         if "room_code" in self.request.session:
-            self.request.session.pop("room_code") 
+            self.request.session.pop("room_code")
             host_id = self.request.session.session_key
             room_results = Room.objects.filter(host=host_id)
+            user_results = User.objects.filter(user=host_id)
+            
+            if len(user_results)>0:
+                user = user_results[0]
+                user.delete()
+
             if len(room_results)>0:
                 room = room_results[0]
                 room.delete()
