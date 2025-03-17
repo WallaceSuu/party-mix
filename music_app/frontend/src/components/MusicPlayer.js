@@ -11,7 +11,6 @@ export default class MusicPlayer extends Component {
     }
 
     onPauseSong() {
-        console.log(this.props);
         const csrfToken = document.cookie.match(/csrftoken=([^;]+)/);
         const token = csrfToken ? csrfToken[1] : "";
         const requestOptions = {

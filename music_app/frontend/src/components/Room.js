@@ -40,7 +40,7 @@ export default class Room extends Component {
         clearInterval(this.interval);
     }
 
-    getRoomDetails() {
+    getRoomDetails = () => {
         fetch('/api/get-room' + '?code=' + this.roomCode).then((response) => {
             if (!response.ok) {
                 this.props.leaveRoomCallback();
@@ -60,7 +60,7 @@ export default class Room extends Component {
         })
     }
 
-    authenticateSpotify() {
+    authenticateSpotify = () => {
         fetch('/spotify/is-authenticated')
             .then((response) => response.json())
             .then((data) => {
@@ -76,7 +76,7 @@ export default class Room extends Component {
         });
     }
 
-    getCurrentSong() {
+    getCurrentSong = () => {
         fetch("/spotify/current-song").then((response) => {
             if (!response.ok) {
                 return {};
@@ -116,13 +116,13 @@ export default class Room extends Component {
         });
     }
 
-    onUpdateShowSettings(value) {
+    onUpdateShowSettings = (value) => {
         this.setState({
             showSettings: value,
         });
     }
 
-    renderSettings() {
+    renderSettings = () => {
         return (<Grid container spacing={1}>
             <Grid item xs={12} align="center">
                 <CreateRoomPage 
@@ -144,7 +144,7 @@ export default class Room extends Component {
         </Grid>)
     }
 
-    renderSettingsButton() {
+    renderSettingsButton = () => {
         return (
             <Grid item xs={12} align="center">
                 <Button variant="contained" color="primary" onClick={() => this.onUpdateShowSettings(true)}>
