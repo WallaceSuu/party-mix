@@ -162,20 +162,26 @@ export default class Room extends Component {
         return (
             <div className="main-wrapper">
                 <Box position="absolute" top={0} left={0} zIndex={1}>
-                    <Typography variant="h6" component="h6">
-                        {this.state.isHost ? "Host" : ""}
-                        <List>
-                            {this.state.users.map((user, index) => (
-                                <ListItem key={index}>
-                                    <ListItemText primary={user.username} />
-                                </ListItem>
-                            ))}
-                        </List>
+                    <Typography variant="h6" component="h6" style={{ textShadow: '1px 1px 2px rgba(0, 0, 0, 0.3)'}}>
+                        {this.state.isHost ? "Currently Host" : ""}
                     </Typography>
+                    <Typography variant="h7" component="h7" style={{ textShadow: '1px 1px 2px rgba(0, 0, 0, 0.3)'}}>
+                        {(this.state.users).length} Active {(this.state.users).length === 0 ? "Users" : "User"}
+                    </Typography>
+                    <List>
+                        {this.state.users.map((user, index) => (
+                            <ListItem key={index}>
+                                <ListItemText 
+                                primary={user.username}
+                                style={{ textShadow: '1px 1px 2px rgba(0, 0, 0, 0.3)'}}
+                                />
+                            </ListItem>
+                        ))}
+                    </List>
                 </Box>
                 <Grid container spacing={1} justifyContent="center">
                     <Grid item xs={12} align="center">
-                        <Typography variant="h6" component="h6">
+                        <Typography variant="h6" component="h6" style={{ textShadow: '1px 1px 2px rgba(0, 0, 0, 0.3)'}}>
                             Code: {this.roomCode}
                         </Typography>
                     </Grid>

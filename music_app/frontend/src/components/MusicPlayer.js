@@ -35,15 +35,15 @@ export default class MusicPlayer extends Component {
     }
 
     onSkipSong() {
-            const csrfToken = document.cookie.match(/csrftoken=([^;]+)/);
-            const token = csrfToken ? csrfToken[1] : "";
-            const requestOptions = {
-                method: "POST",
-                headers: { "Content-Type": "application/json",
-                           "X-CSRFToken": token,
-                },
-            };
-            fetch("/spotify/skip", requestOptions);
+        const csrfToken = document.cookie.match(/csrftoken=([^;]+)/);
+        const token = csrfToken ? csrfToken[1] : "";
+        const requestOptions = {
+            method: "POST",
+            headers: { "Content-Type": "application/json",
+                        "X-CSRFToken": token,
+            },
+        };
+        fetch("/spotify/skip", requestOptions);
     }
 
     onGoBack() {
@@ -62,7 +62,7 @@ export default class MusicPlayer extends Component {
         const songProgress = (this.props.time/this.props.duration)*100;
 
         return (
-            <Card>
+            <Card style={{ color: 'black' }}>
                 <Grid container alignItems="center">
                     <Grid item xs={4} align="center">
                         <img src={this.props.image_url} height="100%" width="100%"/>
