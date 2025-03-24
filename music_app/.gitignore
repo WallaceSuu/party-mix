@@ -23,3 +23,12 @@ npm-debug.log*
 *.tsbuildinfo
 .env.*
 .pyc
+# Ignore node_modules
+/node_modules/
+
+# Ignore Python bytecode files
+*.pyc
+__pycache__/
+
+# Ignore SQLite database files
+*.sqlite3
