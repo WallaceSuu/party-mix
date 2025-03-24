@@ -62,6 +62,8 @@ def renew_spotify_token(session_id):
 
 def execute_spotify_api_request(session_id, endpoint, post_=False, put_=False):
     tokens = get_user_tokens(session_id)
+    if tokens is None:
+        return{"Error ": "User not authenticated with Spotify"}
     header = {"Content-Type": "application/json", "Authorization": "Bearer " + tokens.access_token}
     
     if post_:
