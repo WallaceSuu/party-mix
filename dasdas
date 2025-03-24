@@ -1,0 +1,19 @@
+[33ma016479f[m[33m ([m[1;36mHEAD -> [m[1;32mmain[m[33m, [m[1;31morigin/main[m[33m, [m[1;31morigin/HEAD[m[33m)[m merge(?)
+[33m21081224[m gitignore
+[33mca2819ce[m[33m ([m[1;31morigin/username_join[m[33m, [m[1;32musername_join[m[33m)[m updated gitignore
+[33m345da5d3[m stylistic changes
+[33mc1f2e704[m gradient styling
+[33m9d8edd27[m display users in the room
+[33mdb263499[m arrow functions
+[33m463defb3[m functioning user database
+[33m7ab33df2[m previous skip button
+[33m2bca9c29[m dynamic username input form
+[33m49500f39[m small changes
+[33m1d7409ca[m stylistic changes, skip previous button
+[33m1651fa95[m pause/play function + general styling
+[33m8ba48a89[m added music player
+[33mc5fc270c[m further bug fixes
+[33m0d45e76f[m bug fixes
+[33m0123d716[m spotify authentication
+[33m4abd4a41[m default props and callback
+[33mdb4c37b4[m initial commit
