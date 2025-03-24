@@ -2,6 +2,10 @@ import React, { Component } from "react";
 import { Grid, Button, Typography, Box } from "@material-ui/core"
 import CreateRoomPage from "./CreateRoomPage";
 import MusicPlayer from "./MusicPlayer";
+import List from "@material-ui/core/List";
+import ListItem from "@material-ui/core/ListItem";
+import ListItemIcon from "@material-ui/core/ListItemIcon";
+import ListItemText from "@material-ui/core/ListItemText";
 
 export default class Room extends Component {
     constructor(props) {
@@ -13,6 +17,7 @@ export default class Room extends Component {
             showSettings: false,
             spotifyAuthenticated: false,
             song: {},
+            users: [],
         };
         this.roomCode = this.props.match.params.roomCode;
         this.onLeaveButton = this.onLeaveButton.bind(this);
@@ -22,18 +27,20 @@ export default class Room extends Component {
         this.getRoomDetails = this.getRoomDetails.bind(this);
         this.authenticateSpotify = this.authenticateSpotify.bind(this);
         this.getCurrentSong = this.getCurrentSong.bind(this);
+        this.getUsersInRoom = this.getUsersInRoom.bind(this);
         this.getRoomDetails();
     }
 
     componentDidMount() {
-        this.interval = setInterval(this.getCurrentSong, 1000);
+        this.interval = setInterval(this.getCurrentSong, 3000);
+        this.interval = setInterval(this.getUsersInRoom, 3000);
     }
 
     componentWillUnmount() {
         clearInterval(this.interval);
     }
 
-    getRoomDetails() {
+    getRoomDetails = () => {
         fetch('/api/get-room' + '?code=' + this.roomCode).then((response) => {
             if (!response.ok) {
                 this.props.leaveRoomCallback();
@@ -53,7 +60,7 @@ export default class Room extends Component {
         })
     }
 
-    authenticateSpotify() {
+    authenticateSpotify = () => {
         fetch('/spotify/is-authenticated')
             .then((response) => response.json())
             .then((data) => {
@@ -69,7 +76,7 @@ export default class Room extends Component {
         });
     }
 
-    getCurrentSong() {
+    getCurrentSong = () => {
         fetch("/spotify/current-song").then((response) => {
             if (!response.ok) {
                 return {};
@@ -81,10 +88,21 @@ export default class Room extends Component {
         })
     }
 
+    getUsersInRoom() {
+        fetch("/api/users-in-room").then((response) => {
+            if (!response.ok) {
+                return {};
+            } else {
+                return response.json();
+            }
+        }).then((data) => {
+            this.setState({users: data})
+        })
+    }
+
     onLeaveButton() {
         const csrfToken = document.cookie.match(/csrftoken=([^;]+)/);
         const token = csrfToken ? csrfToken[1] : "";
-
         const requestOptions = {
             method: "POST",
             credentials: "same-origin",
@@ -98,13 +116,13 @@ export default class Room extends Component {
         });
     }
 
-    onUpdateShowSettings(value) {
+    onUpdateShowSettings = (value) => {
         this.setState({
             showSettings: value,
         });
     }
 
-    renderSettings() {
+    renderSettings = () => {
         return (<Grid container spacing={1}>
             <Grid item xs={12} align="center">
                 <CreateRoomPage 
@@ -126,7 +144,7 @@ export default class Room extends Component {
         </Grid>)
     }
 
-    renderSettingsButton() {
+    renderSettingsButton = () => {
         return (
             <Grid item xs={12} align="center">
                 <Button variant="contained" color="primary" onClick={() => this.onUpdateShowSettings(true)}>
@@ -144,18 +162,31 @@ export default class Room extends Component {
         return (
             <div className="main-wrapper">
                 <Box position="absolute" top={0} left={0} zIndex={1}>
-                    <Typography variant="h6" component="h6">
-                        {this.state.isHost ? "Host" : ""}
+                    <Typography variant="h6" component="h6" style={{ textShadow: '1px 1px 2px rgba(0, 0, 0, 0.3)'}}>
+                        {this.state.isHost ? "Currently Host" : ""}
                     </Typography>
+                    <Typography variant="h7" component="h7" style={{ textShadow: '1px 1px 2px rgba(0, 0, 0, 0.3)'}}>
+                        {(this.state.users).length} Active {(this.state.users).length === 0 ? "Users" : "User"}
+                    </Typography>
+                    <List>
+                        {this.state.users.map((user, index) => (
+                            <ListItem key={index}>
+                                <ListItemText 
+                                primary={user.username}
+                                style={{ textShadow: '1px 1px 2px rgba(0, 0, 0, 0.3)'}}
+                                />
+                            </ListItem>
+                        ))}
+                    </List>
                 </Box>
                 <Grid container spacing={1} justifyContent="center">
                     <Grid item xs={12} align="center">
-                        <Typography variant="h6" component="h6">
+                        <Typography variant="h6" component="h6" style={{ textShadow: '1px 1px 2px rgba(0, 0, 0, 0.3)'}}>
                             Code: {this.roomCode}
                         </Typography>
                     </Grid>
                     <Grid item xs={8}>
-                        <MusicPlayer {...this.state.song}/>
+                        <MusicPlayer {...this.state.song} isHost={this.state.isHost} />
                     </Grid>
                     {this.state.isHost ? this.renderSettingsButton() : null}
                     <Grid item xs={12} align="center">
