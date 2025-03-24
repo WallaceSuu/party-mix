@@ -25,3 +25,7 @@ npm-debug.log*
 node_modules/
 .sqlite3
 
+music_app/db.sqlite3
+*.sqlite3
+music_app/db.sqlite3
+*.sqlite3
