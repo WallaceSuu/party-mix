@@ -3,11 +3,11 @@ const webpack = require("webpack");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 
 module.exports = {
-  entry: "./src/index.js",
+  entry: "./src/index.js", // Entry file for the React app
   output: {
-    path: path.resolve(__dirname, "build"), // Output to 'build' folder
-    filename: "static/js/bundle.js", // Store in static/js/
-    publicPath: "/static/", // Serve from /static/
+    path: path.resolve(__dirname, "build"), // Output to the 'build' folder
+    filename: "frontend/main.js", // Output as main.js in the static/js folder
+    publicPath: "/static/", // Serve static files from /static/
   },
   module: {
     rules: [
@@ -32,7 +32,7 @@ module.exports = {
     ],
   },
   optimization: {
-    minimize: true,
+    minimize: true, // Minify the output for production
   },
   plugins: [
     new webpack.DefinePlugin({
@@ -41,7 +41,7 @@ module.exports = {
     new HtmlWebpackPlugin({
       template: "./templates/frontend/index.html", // Path to your HTML template
       filename: "index.html", // Output file name for the generated HTML
-      minify: false,
+      minify: false, // Prevent minification of HTML
     }),
   ],
 };
