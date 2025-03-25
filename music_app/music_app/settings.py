@@ -27,7 +27,7 @@ SECRET_KEY = os.environ.get("SECRET_KEY", "abc")
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.environ.get("DEBUG", "False").lower() == "True"
 
-ALLOWED_HOSTS = os.environ.get("ALLOWED_HOSTS", "localhost 127.0.0.1").split(" ")
+ALLOWED_HOSTS = os.environ.get("ALLOWED_HOSTS", "localhost 127.0.0.1 party-mix.onrender.com").split(" ")
 
 
 # Application definition
@@ -42,7 +42,8 @@ INSTALLED_APPS = [
     "api.apps.ApiConfig",
     "rest_framework",
     "frontend.apps.FrontendConfig",
-    "spotify.apps.SpotifyConfig"
+    "spotify.apps.SpotifyConfig",
+    "corsheaders",
 ]
 
 MIDDLEWARE = [
@@ -54,7 +55,10 @@ MIDDLEWARE = [
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
     "whitenoise.middleware.WhiteNoiseMiddleware",
+    "corsheaders.middleware.CorsMiddleware",
 ]
+
+CORS_ALLOW_ALL_ORIGINS = True
 
 ROOT_URLCONF = "music_app.urls"
 

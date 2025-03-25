@@ -8,7 +8,3 @@ load_dotenv(dotenv_path)
 CLIENT_ID = os.getenv("CLIENT_ID") or os.environ.get("CLIENT_ID")
 CLIENT_SECRET = os.getenv("CLIENT_SECRET") or os.environ.get("CLIENT_SECRET")
 REDIRECT_URI = os.getenv("REDIRECT_URI") or os.environ.get("REDIRECT_URI")
-
-print("PATH:", dotenv_path)
-
-print(CLIENT_ID, CLIENT_SECRET, REDIRECT_URI)

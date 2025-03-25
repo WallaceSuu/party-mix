@@ -78,7 +78,6 @@ def execute_spotify_api_request(session_id, endpoint, post_=False, put_=False):
     try:
         return response.json()
     except:
-        #print(response)
         return {"Error": "Issue with request"}
     
 def pause_song(session_id):
